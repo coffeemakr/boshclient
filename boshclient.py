@@ -101,7 +101,12 @@ class BOSHClient:
     def init_connection(self):
         """Initialize the HTTP connection (not the XMPP session!)"""
         self.log('Initializing connection to %s' % (self.bosh_service.netloc))
-        self.connection = httplib.HTTPConnection(self.bosh_service.netloc)
+        if self.bosh_service.scheme == "https":
+            self.connection = httplib.HTTPSConnection(self.bosh_service.netloc)
+        elif self.bosh_service.scheme == "http":
+            self.connection = httplib.HTTPConnection(self.bosh_service.netloc)
+        else:
+            raise ConnectionError
         self.log('Connection initialized')
         # TODO add exceptions handler there (URL not found etc)
     
